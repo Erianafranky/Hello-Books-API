@@ -12,8 +12,5 @@ class Book(object):
 		"""
 		self.books.append(book)
 
-	def return_book(self, book):
-		"""
-		function to return books
-		"""
+	
 		
