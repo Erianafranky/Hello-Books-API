@@ -28,7 +28,7 @@ class User(object):
 		"""
 		self.books.remove(book)
 
-	def get_book(self):
+	def get_books(self):
 		"""
 		function to get all the books created
 		"""
