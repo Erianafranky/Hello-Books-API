@@ -21,6 +21,7 @@ class User(object):
 		"""function to add books
 		"""
 		self.books.append(book)
+		
 
 	def delete_book(self, book):
 		"""
@@ -33,3 +34,9 @@ class User(object):
 		function to get all the books created
 		"""
 		return self.books
+
+	def borrow_book(self, book):
+		"""
+		function to borrow books
+		"""
+		self.books.remove(book)

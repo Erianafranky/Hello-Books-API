@@ -7,11 +7,6 @@ class Book(object):
 		self.name = name
 		self.books = []
 
-	def borrow_book(self, book):
-		"""
-		function to borrow books
-		"""
-		self.books.append(book)
-
+	
 	
 		
