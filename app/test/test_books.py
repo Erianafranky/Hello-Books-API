@@ -1,5 +1,5 @@
 import unittest
-from app.classes.books import Books
+from app.classes.books import Book
 
 class TestBook(unittest.TestCase):
 	"""
@@ -7,13 +7,13 @@ class TestBook(unittest.TestCase):
 	"""
 
 	def setUp(self):
-		self.book = Book('User')
+		self.books = Book('User')
 
 	def test_borrow_book(self):
 		"""
 		Test to borrow a book
 		"""
-		self.user.borrow_book('book1')
+		self.books.borrow_book('book1')
 		self.assertEqual(self.user.books, ['book1'])
 
 
