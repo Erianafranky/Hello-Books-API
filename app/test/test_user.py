@@ -46,6 +46,17 @@ class TestUser(unittest.TestCase):
 		self.user.books.append('book1')
 		self.assertEqual(self.user.get_books(),['book1'])
 
+	def test_borrow_books(self):
+		"""
+		User can borrow books
+		"""
+		self.user.books.append('get rich')
+		self.user.books.append('transformation')
+		self.user.borrow_book('get rich')
+		self.assertEqual(self.user.books, ['transformation'])
+
+
+
 
 if __name__ == '__main__':
 	unittest.main()

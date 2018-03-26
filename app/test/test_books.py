@@ -7,14 +7,7 @@ class TestBook(unittest.TestCase):
 	"""
 
 	def setUp(self):
-		self.books = Book('User')
-
-	def test_borrow_book(self):
-		"""
-		Test to borrow a book
-		"""
-		self.books.borrow_book('book1')
-		self.assertEqual(self.user.books, ['book1'])
+		self.book = Book('User')
 
 
 if __name__ == '__main__':
