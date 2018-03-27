@@ -7,6 +7,7 @@ app = Flask(__name__)
 
 app.config['SECRET_KEY'] = 'mysecretkey'
 
+users = {}
 books = [{'id': 1, 'name' : 'get rich'},
          {'id': 2, 'name' : 'good deeds'},
          {'id': 3, 'name' : 'transformation'}] 
@@ -37,7 +38,8 @@ def create_account(username=None, email=None, password=None):
 def login(username=None, password=None):
 	"""function to enable users to login
 	"""
-	if request.method == 'POST':
+	if not request.json or 'username' not in request.json:
+		abort(400)
 		data = request.get_json()
 		username = data['username']
 		password = data['password']
@@ -45,24 +47,23 @@ def login(username=None, password=None):
 		user=users.get(username, False)
 		if user and user.login(username, password):
 			session['username'] = username
-			session['logged_in'] = True
+			session['password'] = password
 			return jsonify({'message' : 'You are logged in successfully'})
 		else:
-			abort(400)
+			abort(404)
 
 @app.route('/api/v1/auth/reset-password', methods=['POST'])
 def reset_password():
+	"""
+	function to reset a user password
+	"""
+	if not request.json or not 'username' in request.json:
+		abort(400)
 	username = request.json.get('username')
 	new_password = request.json.get(new_password)
-	if username:
-		user = Users.query.filter_by(username=username).first()
-	else:
-		user = Users.query.filter_by(email=email).first()
-	if not user:
-		return jsonify({'message' : 'No user information'})
-	return jsonify({'message' : 'Successfully changed password'})
-
-
+	user = User(username, email, password)
+	if user:
+		return jsonify({'message' : 'Successfully changed password'})
 
 @app.route('/api/v1/books', methods=['POST'])
 def add_book():
@@ -84,9 +85,7 @@ def update_book(bookId):
 	book = [book for book in books if book['id'] == int(bookId)]
 	if len(book) == 0:
 		abort(404)
-	
-	
-	if 'name' in request.json and type(request.json['']) != unicode:
+	if 'name' in request.json and type(request.json['name']) != unicode:
 		abort(400)
 	book[0]['name'] = request.json.get('name', book[0]['name'])
 	return jsonify({'book' : book[0]})
@@ -119,6 +118,9 @@ def delete_book(bookId):
 
 @app.route('/api/v1/users/books/<bookId>', methods=['POST'])
 def borrow_book(bookId):
+	"""
+	function to enable users to login
+	"""
 	book = [book for book in books if book['id'] == int(bookId)]
 	if len(book) == 0:
 		abort(404)
@@ -126,9 +128,11 @@ def borrow_book(bookId):
 	books.remove(book[0])
 	return jsonify({'message' : 'Book borrowed'})
 
-
 @app.route('/api/v1/auth/logout', methods=['POST'])
 def logout():
+	"""
+	Enables users to login
+	"""
 	session.clear()
 	return jsonify({'message' : 'Successfully logged out'})
 
