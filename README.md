@@ -1,4 +1,4 @@
-# Hello-Books-API
+# Hello-Books-API  [![Build Status](https://travis-ci.org/Erianafranky/Hello-Books-API.svg?branch=master)](https://travis-ci.org/Erianafranky/Hello-Books-API)
 
 Hello-Books is a simple Flask API that manage a library and its processes like stocking, tracking and renting books
 
