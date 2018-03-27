@@ -7,10 +7,6 @@ app = Flask(__name__)
 
 app.config['SECRET_KEY'] = 'mysecretkey'
 
-users = [{'username' : 'dottie'},
-         {'email' : 'dottie@gmail.com'},
-         {'password' : '123456'}]
-
 books = [{'id': 1, 'name' : 'get rich'},
          {'id': 2, 'name' : 'good deeds'},
          {'id': 3, 'name' : 'transformation'}] 
@@ -36,11 +32,6 @@ def create_account(username=None, email=None, password=None):
 		user = User(username, email, password)
 		users[user.email] = user
 		return jsonify({'message' : 'You are successfully registered'})
-
-
-
-
-	
 
 @app.route('/api/v1/auth/login', methods=['POST'])
 def login(username=None, password=None):
@@ -78,17 +69,12 @@ def add_book():
 	"""
 	Function to create a book
 	"""
-	book = {'name' : request.json['name']}
-
-	books.append(book)
-	return jsonify({'books' : books})
-	
-	#book = {
-	   # 'id': books[-1]['id'] + 1,
-	    #'name': request.json['name']
-	   # }
-	#books.append(book[0])
-	#return jsonify({'book': book}), 201	
+	book = {
+	    'id': books[-1]['id'] + 1,
+	    'name': request.json['name']
+	    }
+	books.append(book[0])
+	return jsonify({'book': book}), 201	
 
 @app.route('/api/v1/books/<bookId>', methods=['PUT'])
 def update_book(bookId):
