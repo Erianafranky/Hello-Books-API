@@ -15,12 +15,14 @@ Hello-Books is a simple Flask API that manage a library and its processes like s
 **Tools**
 
 Microframework: Flask
+
 Programming Language: Python 3
+
 Api development: Postman
 
 **Tests**
 
-From the project's directory run the test by using this command python -m unittest discover -v
+From the project's directory run the tests by using this command python -m unittest discover -v
 
 **How to run this project**
 
