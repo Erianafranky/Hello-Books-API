@@ -8,9 +8,9 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'mysecretkey'
 
 users = {}
-books = [{'id': 1, 'name' : 'get rich'},
-         {'id': 2, 'name' : 'good deeds'},
-         {'id': 3, 'name' : 'transformation'}] 
+books = [{'id': 1, 'title' : 'get rich'},
+         {'id': 2, 'title' : 'good deeds'},
+         {'id': 3, 'title' : 'transformation'}] 
 
 @app.errorhandler(404)
 def not_found(error):
@@ -25,21 +25,23 @@ def create_account(username=None, email=None, password=None):
 	"""
 	function to register a user
 	"""
-	username = request.json['username']
-	email = request.json['email']
-	password = request.json['password']
-	confirm_password = request.json['confirm']
-	if password == confirm_password:
-		user = User(username, email, password)
-		users[user.email] = user
-		return jsonify({'message' : 'You are successfully registered'})
+	if request.method == 'POST':
+		username = request.json['username']
+		email = request.json['email']
+		password = request.json['password']
+		confirm_password = request.json['confirm']
+		if password == confirm_password:
+			user = User(username, email, password)
+			users[user.username] = user
+			return jsonify({'message' : 'You are successfully registered'})
+		else:
+			return jsonify({'message' : 'Passwords do not match'})
 
 @app.route('/api/v1/auth/login', methods=['POST'])
 def login(username=None, password=None):
 	"""function to enable users to login
 	"""
-	if not request.json or 'username' not in request.json:
-		abort(400)
+	if request.method == 'POST':
 		data = request.get_json()
 		username = data['username']
 		password = data['password']
@@ -47,35 +49,24 @@ def login(username=None, password=None):
 		user=users.get(username, False)
 		if user and user.login(username, password):
 			session['username'] = username
-			session['password'] = password
+			session['logged_in'] = True
 			return jsonify({'message' : 'You are logged in successfully'})
 		else:
 			abort(404)
-
-@app.route('/api/v1/auth/reset-password', methods=['POST'])
-def reset_password():
-	"""
-	function to reset a user password
-	"""
-	if not request.json or not 'username' in request.json:
-		abort(400)
-	username = request.json.get('username')
-	new_password = request.json.get(new_password)
-	user = User(username, email, password)
-	if user:
-		return jsonify({'message' : 'Successfully changed password'})
 
 @app.route('/api/v1/books', methods=['POST'])
 def add_book():
 	"""
 	Function to create a book
 	"""
+	if not request.json or not 'title' in request.json:
+		abort(400)
 	book = {
-	    'id': books[-1]['id'] + 1,
-	    'name': request.json['name']
-	    }
-	books.append(book[0])
-	return jsonify({'book': book}), 201	
+	     'id' : books[-1]['id'] + 1,
+	     'title' : request.json['title']
+	}
+	books.append(book)
+	return jsonify({'book' : book}), 201	
 
 @app.route('/api/v1/books/<bookId>', methods=['PUT'])
 def update_book(bookId):
@@ -85,9 +76,9 @@ def update_book(bookId):
 	book = [book for book in books if book['id'] == int(bookId)]
 	if len(book) == 0:
 		abort(404)
-	if 'name' in request.json and type(request.json['name']) != unicode:
+	if 'title' in request.json and type(request.json['title']) != str:
 		abort(400)
-	book[0]['name'] = request.json.get('name', book[0]['name'])
+	book[0]['title'] = request.json.get('title', book[0]['title'])
 	return jsonify({'book' : book[0]})
 
 @app.route('/api/v1/books', methods=['GET'])
